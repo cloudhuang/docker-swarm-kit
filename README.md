@@ -72,7 +72,7 @@ Service URL:
 
 ### Setup Portainer managerment UI
 ```
-sh 4. portainer.sh
+sh 4.portainer.sh
 ```
 
 Service URL:
