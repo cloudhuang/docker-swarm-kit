@@ -30,6 +30,14 @@ systemctl restart docker
 ### Setup swarm mode
 ```
 docker swarm init --advertise-addr 192.168.153.144
+
+Swarm initialized: current node (hbyx9xxucp7x5xrkpvulddtfu) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-266bq9jsnf5t4em5rkccw8w1qu1ui9xz8s3zp084vsg7gto1d8-dsy66w8ywkh5mqktezmkeozdz 192.168.153.144:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
 ### Add as manager node (Optional)
 ```
