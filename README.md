@@ -99,3 +99,20 @@ To addess the services url, you need configure the DNS server or, add following 
 192.168.153.144 swarmpit.dev.local
 192.168.153.144 portainer.dev.local
 ```
+
+### Install jenkins
+```
+sh 5.jenkins.yaml
+```
+
+## Tips
+1. Using NFS share data
+```
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.3.1,rw"
+      device: ":/data/nfsdata/mysql_data" 
+```

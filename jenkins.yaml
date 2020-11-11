@@ -1,0 +1,48 @@
+version: '3.3'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Dhudson.footerURL=http://dev.local
+      - JENKINS_USER=admin
+      - JENKINS_PASS=admin
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-net
+      - traefik-public
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+         condition: on-failure
+      placement:
+        constraints: 
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.jenkins-http.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.jenkins-http.entrypoints=http
+        - traefik.http.routers.jenkins-http.middlewares=https-redirect
+        - traefik.http.routers.jenkins-https.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.jenkins-https.entrypoints=https
+        - traefik.http.routers.jenkins-https.tls=true
+        - traefik.http.routers.jenkins-https.tls.certresolver=le
+        - traefik.http.services.jenkins.loadbalancer.server.port=8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sS http://localhost:8080/login || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5      
+
+volumes:
+  jenkins_data:
+
+networks:
+  jenkins-net:
+
+  traefik-public:
+    external: true
